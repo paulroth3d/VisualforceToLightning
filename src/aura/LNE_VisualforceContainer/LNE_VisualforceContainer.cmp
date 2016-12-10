@@ -1,0 +1,37 @@
+<!--
+/**
+ * Visualforce component replacement to allow discussion between windows.
+ * @author Paul Roth <proth@salesforce.com>
+ **/
+-->
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId"
+    access="global"
+>
+    <!-- designer -->
+    <aura:attribute name='label' type='String' description="Title for the iFrame" access='global' />
+    <aura:attribute name='pageName' type='String' default='TEST_DemoLightningComm' required='true' description="API name of the page to load" access='global' />
+    <aura:attribute name='urlArguments' type='String' default='' description="Optional additional GET Parameters" access='global' />
+    <aura:attribute name='height' type='Integer' default='600' description="Height of the iFrame" access='global' />
+    <aura:attribute name='recordId' type='Id' access='global' description='Id of the record to be sent (automatic on record detail)' />
+    <!-- public -->
+    <aura:attribute name='debug' type='Boolean' default='false' description="Whether debug is needed" access='public' />
+    <!-- setup -->
+    <aura:attribute name="setupComplete" type='Boolean' default='false' access='public' />
+    <aura:attribute name='src' type='String' access='public' />
+    <!-- scripts -->
+    <ltng:require scripts="{! join(',',
+            $Resource.LNE_GeneralResources+'/js/events/LNE_PostMessage2.js',
+            $Resource.LNE_GeneralResources+'/js/events/LNE_MessagePostOffice.js'
+        )}"
+    	afterScriptsLoaded='{!c.handleScriptsLoaded}'
+    />
+    <!--  -->
+    <!-- handlers -->
+    <aura:handler name='init' value='{!this}' action='{!c.doInit}' />
+    
+    <!-- component -->
+    <aura:if isTrue='{!not(empty(v.label))}'><p class='slds-page-header__title slds-truncate' title='{!v.label}'>{!v.label}</p></aura:if>
+    <aura:if isTrue='{!not(empty(v.src))}'>
+    	<iframe src="{!v.src}" aura:id='targetFrame' class="{! 'vfcontainer vf_' + v.pageName}" frameborder="0" width="100%" height="{!v.height}" scrolling="auto" />
+   	</aura:if>
+</aura:component>

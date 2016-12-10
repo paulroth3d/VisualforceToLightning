@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><package xmlns="http://soap.sforce.com/2006/04/metadata">
+	<version>37.0</version>
+	<types>
+		<name>StaticResource</name>
+		<members>LNE_GeneralResources</members>
+	</types>
+	<types>
+		<name>AuraDefinitionBundle</name>
+		<members>LNE_VisualforceContainer</members>
+	</types>
+	<types>
+		<name>ApexClass</name>
+		<members>TEST_PostMessageParent_C</members>
+	</types>
+	<types>
+		<name>ApexPage</name>
+		<members>TEST_PostMessageChild</members>
+		<members>TEST_PostMessageParent</members>
+	</types>
+</package>

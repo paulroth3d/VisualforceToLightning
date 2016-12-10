@@ -1,0 +1,7 @@
+<design:component label='VisualforceContainer'>
+    <design:attribute name='label' label='Label' />
+	<design:attribute name='pageName' label='Visualforce Page Name' description='API Name of the Visualforce Page to show' />
+    <design:attribute name='urlArguments' label='Additional URL Arguments' />
+    <design:attribute name='height' label='Height (in pixels)' description='Height of the VF Page' />
+    <design:attribute name='debug' label='Debug' default='false' />
+</design:component>

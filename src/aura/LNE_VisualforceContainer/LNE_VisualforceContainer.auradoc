@@ -1,0 +1,18 @@
+<aura:documentation>
+	<aura:description>
+        VisualforceContainer Documentation
+    	<p>A <code>VisualforceContainer</code> is a replacement for the standard Visualforce component.</p>
+        <p>It can be replaced anywhere a standard Visualforce Lightning component is used.</p>
+        <p>It provides
+        	<ul>
+                <li>Updates made in Visualforce can indicate standard UI to refresh</li>
+                <li>Visualforce to Lightning component communication</li>
+                <li>Visualforce pages within the same Lightning Page can communicate with one another.</li>
+            </ul>
+        </p>
+        
+        <p>Please note that this has been enhanced to support the Lightning App Builder.
+            It can be included through config means / without code.
+        </p>
+    </aura:description>
+</aura:documentation>
