@@ -1,17 +1,88 @@
-<project name="Sample usage of Salesforce Ant tasks" default="test" basedir="." xmlns:sf="antlib:com.salesforce">
-
+<?xml version='1.0' encoding='UTF-8'?>
+<project name="Sample usage of Salesforce Ant tasks" default="test" basedir="."
+	xmlns:sf="http://com.salesforce"
+>
+	<property name="antlib" value="lib" />
+	<taskdef resource="net/sf/antcontrib/antlib.xml">
+		<classpath>
+			<pathelement location="${antlib}/ant-contrib-1.0b3.jar" />
+		</classpath>
+	</taskdef>
+	
+	<taskdef resource="com/salesforce/sforce_ant.properties" uri="http://com.salesforce">
+		<classpath>
+			<pathelement location="${antlib}/ant-salesforce.jar" />
+		</classpath>
+	</taskdef>
+	
     <property file="build.properties"/>
     <property environment="env"/>
  
     <condition property="sf.username" value=""> <not> <isset property="sf.username"/> </not> </condition>
     <condition property="sf.password" value=""> <not> <isset property="sf.password"/> </not> </condition>
     <condition property="sf.sessionId" value=""> <not> <isset property="sf.sessionId"/> </not> </condition>
+    
+    <if>
+    	<or>
+    		<equals arg1="${sf.username}" arg2="$${sf.username}" />
+    		<equals arg1="${sf.username}" arg2="" />
+    	</or>
+    	<then>
+    		<echo><![CDATA[
+Please run:
 
-    <taskdef resource="com/salesforce/antlib.xml" uri="antlib:com.salesforce">
-        <classpath>
-            <pathelement location="/Users/hakpala/software/sfdcant/ant-salesforce.jar" />        	
-        </classpath>
-    </taskdef>
+ant makeCredentials
+
+to continue.
+]]></echo>
+    		<fail />
+    	</then>
+    </if>
+    
+    <target name="helpme"><echo><![CDATA[
+example help me
+	]]></echo></target>
+    
+    <target name="makeCredentials">
+    	<echo><![CDATA[
+What is your username?]]></echo>
+		<input addproperty="username" />
+    	<echo><![CDATA[
+What is your password?]]></echo>
+		<input addproperty="password" />
+    	<echo><![CDATA[
+What is your security token?]]></echo>
+		<input addproperty="token" />
+    	<echo><![CDATA[
+What is your domain host?
+(ex: test.salesforce.com or login.salesforce.com)]]></echo>
+		<input addproperty="host" />
+		
+		<!-- default blanks if someone just hits return -->
+		<property name="username" value="" />
+		<property name="password" value="" />
+		<property name="token" value="" />
+		<property name="host" value="" />
+		
+		<echo file="build.properties"><![CDATA[
+# Specify the login credentials for the desired Salesforce organization
+
+sf.username=${username}
+sf.password=${password}{$token}
+
+#sf.sessionId = <Insert your Salesforce session id here.  Use this or username/password above.  Cannot use both>
+#sf.pkgName = <Insert comma separated package names to be retrieved>
+#sf.zipFile = <Insert path of the zipfile to be retrieved>
+#sf.metadataType = <Insert metadata type name for which listMetadata or bulkRetrieve operations are to be performed>
+
+# Use 'https://login.salesforce.com' for production or developer edition (the default if not specified).
+# Use 'https://test.salesforce.com for sandbox.
+sf.serverurl=https://${host}
+
+sf.maxPoll=500
+# If your network requires an HTTP proxy, see http://ant.apache.org/manual/proxy.html for configuration.
+]]></echo>
+    </target>
     
     <target name="test">
       <sf:deploy username="${sf.username}" password="${sf.password}" sessionId="${sf.sessionId}" serverurl="${sf.serverurl}" maxPoll="${sf.maxPoll}"
