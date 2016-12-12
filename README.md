@@ -1,19 +1,35 @@
 # Overview
 
-Please see the doc here:
+Please note that this repo contains the following:
 
-# Deploying
+* Lightning component LNE_VisualforceContainer (the container component)
+* Static resource LNE_GeneralResources (static resource used by component)
 
-You must add a new custom field on Contact called 'Custom Field' (CustomField__c)
-@TODO: update the deployment to include that custom field...
+along with demo materials:
 
-Use the metadata api / ant to deploy the attached build
+* DEMO_CustomCount__c custom field on Contact
+* TEST_PostMessageParent - starting point for the demo
+* TEST_PostMessageParent__c custom controller
+* TEST_PostMessageChild - child page contained within the demo
 
-	ant -lib lib test
+# Deploying Demo
 
-or to deploy
+@TODO: make a separate deployment for just the component and static resource
 
-	ant -lib lib deploy
+**1: run `ant makeCredentials` to generate the credentials file**
+
+	ant makeCredentials
+	
+**2: run `ant test` to do a test deploy**
+
+	ant test
+	
+**3: run `ant deploy` to deploy the demo to your org**
+
+	ant deploy
+	
+**4: login and navigate to /apex/TEST_PostMessageParent**
+
 
 # Helpers
 
