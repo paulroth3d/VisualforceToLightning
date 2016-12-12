@@ -5,6 +5,10 @@
 		<members>LNE_GeneralResources</members>
 	</types>
 	<types>
+		<name>CustomField</name>
+		<members>*</members>
+	</types>
+	<types>
 		<name>AuraDefinitionBundle</name>
 		<members>LNE_VisualforceContainer</members>
 	</types>
