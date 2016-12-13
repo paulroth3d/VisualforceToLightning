@@ -162,7 +162,7 @@
             var updatedContacts = _.union( contacts );
             
             _.each( updatedContacts, function( contact, index ){
-                contact.CustomField__c++;
+                contact.DEMO_CustomCount__c++;
             });
             
             //-- always remove attributes before attempting an update

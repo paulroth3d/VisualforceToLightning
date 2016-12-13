@@ -7,7 +7,8 @@ global class TEST_PostMessageParent_C {
     
     //-- constants
     public static final String PARAM_ID = 'Id';
-    public static final String ERROR_ID_MUST_BE_SENT = 'ID Get parameter must be sent. Try: apex/TEST_PostMessageParent?id=[ account id ]';
+    public static final String ERROR_ID_MUST_BE_SENT = 'ID Get parameter must be sent. Try: apex/TEST_PostMessageParent?id=';
+    public static final String ERROR_ID_ACCOUNT_ID = '[ Id of Account with Contacts ]';
     public static final String ERROR_FINDING_CHILDREN = 'Exception occurred when finding the records';
     
     public String[] errorStrings { get; set; }
@@ -39,17 +40,26 @@ global class TEST_PostMessageParent_C {
         Map<String,String> params = ApexPages.currentPage().getParameters();
         if( !params.containsKey( PARAM_ID )){
             //-- page must have the param sent.
-            addPageMessage( ERROR_ID_MUST_BE_SENT );
+            
+            String pageMessageStr=ERROR_ID_MUST_BE_SENT + ERROR_ID_ACCOUNT_ID;
+            try {
+            	AggregateResult[] ar = [ select AccountId, count(Name) from contact group by AccountId having count(Name) > 1 ];
+            	String possibleAccountId = (String)ar[0].get('AccountId');
+            	pageMessageStr = ERROR_ID_MUST_BE_SENT + possibleAccountId;
+            } catch( Exception err ){
+            }
+            addPageMessage( pageMessageStr );
+            return;
         } else {
             this.accountId=params.get(PARAM_ID);
         }
         
         this.contacts = new Contact[]{};
         try {
-            this.contacts = [ Select id, name, CustomField__c from Contact where AccountId = :this.accountId ];
+            this.contacts = [ Select id, name, DEMO_CustomCount__c from Contact where AccountId = :this.accountId ];
             for( Contact c : this.contacts ){
-            	if( c.CustomField__c == null ){
-            		c.CustomField__c = 0.0;
+            	if( c.DEMO_CustomCount__c == null ){
+            		c.DEMO_CustomCount__c = 0.0;
             	}
             }
         } catch( Exception err ){
@@ -80,10 +90,10 @@ global class TEST_PostMessageParent_C {
      **/
     @RemoteAction
     public static Contact[] listContacts( Id accountId ){
-        Contact[] results = [ Select id, name, CustomField__c from Contact where AccountId = :accountId ];
+        Contact[] results = [ Select id, name, DEMO_CustomCount__c from Contact where AccountId = :accountId ];
         for( Contact c : results ){
-			if( c.CustomField__c == null ){
-				c.CustomField__c = 0.0;
+			if( c.DEMO_CustomCount__c == null ){
+				c.DEMO_CustomCount__c = 0.0;
 			}
 		}
         return( results );
