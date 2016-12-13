@@ -22,28 +22,11 @@
     <condition property="sf.password" value=""> <not> <isset property="sf.password"/> </not> </condition>
     <condition property="sf.sessionId" value=""> <not> <isset property="sf.sessionId"/> </not> </condition>
     
-    <if>
-    	<or>
-    		<equals arg1="${sf.username}" arg2="$${sf.username}" />
-    		<equals arg1="${sf.username}" arg2="" />
-    	</or>
-    	<then>
-    		<echo><![CDATA[
-Please run:
-
-ant makeCredentials
-
-to continue.
-]]></echo>
-    		<fail />
-    	</then>
-    </if>
+    <description>
+Sample project that deploys a demo of the LightningToVisualforce demo
+	</description>
     
-    <target name="helpme"><echo><![CDATA[
-example help me
-	]]></echo></target>
-    
-    <target name="makeCredentials">
+    <target name="makeCredentials" description="Creates Credentials">
     	<echo><![CDATA[
 What is your username?]]></echo>
 		<input addproperty="username" />
@@ -68,7 +51,7 @@ What is your domain host?
 # Specify the login credentials for the desired Salesforce organization
 
 sf.username=${username}
-sf.password=${password}{$token}
+sf.password=${password}${token}
 
 #sf.sessionId = <Insert your Salesforce session id here.  Use this or username/password above.  Cannot use both>
 #sf.pkgName = <Insert comma separated package names to be retrieved>
@@ -84,16 +67,37 @@ sf.maxPoll=500
 ]]></echo>
     </target>
     
-    <target name="test">
+    <target name="test" description="Tests the Deploy" depends="checkCredentials">
       <sf:deploy username="${sf.username}" password="${sf.password}" sessionId="${sf.sessionId}" serverurl="${sf.serverurl}" maxPoll="${sf.maxPoll}"
       	deployRoot="src/" checkOnly="true"  rollbackOnError="true"
       	/>
     </target>
     
-    <target name="deploy">
+    <target name="deploy" description="Performs the deploy" depends="checkCredentials">
       <sf:deploy username="${sf.username}" password="${sf.password}" sessionId="${sf.sessionId}" serverurl="${sf.serverurl}" maxPoll="${sf.maxPoll}"
       	deployRoot="src/" checkOnly="false"  rollbackOnError="true"
       	/>
+    </target>
+    
+    <!-- internal tasks -->
+    
+    <target name="checkCredentials">
+		<if>
+			<or>
+				<equals arg1="${sf.username}" arg2="$${sf.username}" />
+				<equals arg1="${sf.username}" arg2="" />
+			</or>
+			<then>
+				<echo><![CDATA[
+Please run:
+
+ant makeCredentials
+
+to continue.
+]]></echo>
+				<fail />
+			</then>
+		</if>
     </target>
     
 </project>
