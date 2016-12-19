@@ -1,21 +1,48 @@
 # Overview
 
-Please note that this repo contains the following:
+As a Lightning Experience end user, when I make a change to a field in Visualforce, I want to see that change reflected in the Record Detail or the Highlights Panel.
 
-* Lightning component LNE_VisualforceContainer (the container component)
-* Static resource LNE_GeneralResources (static resource used by component)
+In the inverse of the other issue, when I make a change in Visualforce
+There isn’t a standard means to update the values in the rest of the Lightning Experience.
+(it still shows the old value / Inconsistency)
 
-along with demo materials:
+This can cause confusion and loss of confidence, as the end user isn’t sure if the change was actually made.
 
-* DEMO_CustomCount__c custom field on Contact
-* TEST_PostMessageParent - starting point for the demo
-* TEST_PostMessageParent__c custom controller class
-* TEST_PostMessageChild - child page contained within the demo
-* Contact CustomField - field for the demo to provide a number Contacts (to be incremented)
+Or the user has to refresh the page each time a change was made, which causes more than a little frustration.
 
-(Please note that a custom field is added to Contact for the demo)
+![Problem Statement](docs/images/ProblemStatement1.jpg)
 
-For additional information, please see the [Attached Writeup - VisualforcetoLightningOverview.pdf](VisualforcetoLightningOverview.pdf)
+---
+
+#### Purpose
+
+This repo helps to solve this through the following:
+
+** Custom Lightning Component: LNE_VisualforceContainer **
+
+This is a Lighting Component that can be reused wherever the standard Lightning Visualforce Component is used.
+
+It supports receiving LNE_PostMessages from the contained iFrame (visualforce or otherwise)
+and directs those events to other windows or to Lightning.
+
+** Static Resource: contains LNE_PostMessage and LNE_MessagePostOffice classes **
+
+Static Resource that contains the classes used below, including the LNE_PostMessage and LNE_MessagePostOffice - used in the component.
+
+![Problem Statement](docs/images/ProblemStatement2.jpg)
+
+--
+
+The included demo example provides 3 main scenarios for communicating between domains:
+
+* pre-loading data from visualforce - with a simple message response
+* requesting data from a JS Remoting call
+* performing a data update with additional parameters.
+
+![Overview Image](docs/images/Overview.jpg)
+
+Navigate to the [Demo Section](#Demo) for more details.
+
 
 
 # Included Helpers
@@ -167,6 +194,18 @@ For an example page that communicates please see
 	 @return void
 	 
 #Demo
+
+## Whats in the Demo
+
+The demo example provides 3 main scenarios for communicating between domains:
+
+* DEMO_CustomCount__c custom field on Contact
+* TEST_PostMessageParent - starting point for the demo
+* TEST_PostMessageParent__c custom controller class
+* TEST_PostMessageChild - child page contained within the demo
+* Contact CustomField - field for the demo to provide a number Contacts (to be incremented)
+
+(Please note that a custom field is added to Contact for the demo)
 	 
 ## Deploying Demo
 
@@ -185,12 +224,6 @@ For an example page that communicates please see
 	ant deploy
 	
 **4: login and navigate to /apex/TEST_PostMessageParent**
-
-## Whats in the Demo
-
-The demo example provides 3 main scenarios for communicating between domains:
-
-![Overview Image](docs/images/Overview.jpg)
 
 #### 1: Results already in JavaScript
 
