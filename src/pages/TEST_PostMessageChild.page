@@ -10,7 +10,7 @@
 >
 	<!-- PostMessage communicates between windows -->
 	<apex:includeScript value="{!URLFOR($Resource.LNE_GeneralResources,"js/events/LNE_PostMessage2.js")}" />
-    <!-- Used to simplify remoting calls -->
+	<!-- Used to simplify remoting calls -->
 	<apex:includeScript value="{!URLFOR($Resource.LNE_GeneralResources,"js/remoting/RemotingHelper.js")}" />
 	<!-- handles routing of PostMessages -->
 	<apex:includeScript value="{!URLFOR($Resource.LNE_GeneralResources,"js/events/LNE_MessagePostOffice.js")}" />
@@ -21,118 +21,119 @@
 	<apex:includeScript value="{!URLFOR($Resource.LNE_GeneralResources,"js/lib/underscore.js")}" />
 	
 	
-    
+	
 	<!-- js/events/LNE_MessagePostOffice.js -->
 	<!--
 	<script type='text/javascript'>
-	    
-	    /**
-	     * Class to help manage different types of postMessages based on postMessageType
-	     **/
-	    this.LNE_MessagePostOffice = function( handlerScope ){
-	        if( !handlerScope ){
-	            this.handlerScope = this;
-	        } else {
-	            this.handlerScope = handlerScope;
-	        }
-	        this.handlers = {};
-	        
-	        this.unknownHandlerDefault = function( myPostMessage ){
-	            var errorMessage = 'there was no handler for messageType:' + myPostMessage.messageType;
-                console.error( errorMessage ); console.error( arguments );
-                debugger;
-	        };
-	        
-	        this.unknownHandler = this.unknownHandlerDefault;
-	    }
-	    
-	    /**
-	     * Adds a new handler based on messageType
-	     * @param messageType (string)
-	     * @param handler (function)
-	     **/
-	    this.LNE_MessagePostOffice.prototype.addTypeHandler = function( messageType, handler ){
-	        if( messageType ){
-    	        this.handlers[messageType]=handler;
-	        } else {
-	            this.unknownHandler = handler;
-	        }
-	    }
-	    
-	    /**
-	     *  Handles a new call that comes in
-	     *  @param postMessage event
-	     *  @return boolean - whether the postMessage could be handled (true) or not (false);
-	     **/
-	    this.LNE_MessagePostOffice.prototype.receiveMessage = function( postMessage ){
-	        var myPostMessage = new LNE_PostMessage();
-            if( myPostMessage.parse(postMessage) ){
-                if( this.handlers.hasOwnProperty( myPostMessage.messageType ) ){
-                    this.handlers[ myPostMessage.messageType ].call( this.handlerScope, myPostMessage );
-                    return( true );
-                } if( this.unknownHandler ){
-                    this.unknownHandler.call( this.handlerScope, myPostMessage );
-                    return( false );
-                } else {
-                    this.unknownHandlerDefault.call( this.handlerScope, myPostMessage );
-                    return( false );
-                }
-            } else {
-                //-- not our message
-                return( false );
-            }
-	    }
-	    
-	    /**
-	     *  Listens for Window PostMessage events.
-	     *  var postOffice = new LNE_MessagePostOffice(this);
-	     *  postOffice.listenForPostEvents(window);
-	     *  @param window
-	     **/
-	    this.LNE_MessagePostOffice.prototype.listenForPostEvents = function( targetWindow ){
-	        targetWindow.addEventListener('message',this.receiveMessage.bind(this),false);
-	    }
-    </script>
-    -->
+		
+		/**
+		 * Class to help manage different types of postMessages based on postMessageType
+		 **/
+		this.LNE_MessagePostOffice = function( handlerScope ){
+			if( !handlerScope ){
+				this.handlerScope = this;
+			} else {
+				this.handlerScope = handlerScope;
+			}
+			this.handlers = {};
+			
+			this.unknownHandlerDefault = function( myPostMessage ){
+				var errorMessage = 'there was no handler for messageType:' + myPostMessage.messageType;
+				console.error( errorMessage ); console.error( arguments );
+				debugger;
+			};
+			
+			this.unknownHandler = this.unknownHandlerDefault;
+		}
+		
+		/**
+		 * Adds a new handler based on messageType
+		 * @param messageType (string)
+		 * @param handler (function)
+		 **/
+		this.LNE_MessagePostOffice.prototype.addTypeHandler = function( messageType, handler ){
+			if( messageType ){
+				this.handlers[messageType]=handler;
+			} else {
+				this.unknownHandler = handler;
+			}
+		}
+		
+		/**
+		 *	Handles a new call that comes in
+		 *	@param postMessage event
+		 *	@return boolean - whether the postMessage could be handled (true) or not (false);
+		 **/
+		this.LNE_MessagePostOffice.prototype.receiveMessage = function( postMessage ){
+			var myPostMessage = new LNE_PostMessage();
+			if( myPostMessage.parse(postMessage) ){
+				if( this.handlers.hasOwnProperty( myPostMessage.messageType ) ){
+					this.handlers[ myPostMessage.messageType ].call( this.handlerScope, myPostMessage );
+					return( true );
+				} if( this.unknownHandler ){
+					this.unknownHandler.call( this.handlerScope, myPostMessage );
+					return( false );
+				} else {
+					this.unknownHandlerDefault.call( this.handlerScope, myPostMessage );
+					return( false );
+				}
+			} else {
+				//-- not our message
+				return( false );
+			}
+		}
+		
+		/**
+		 *	Listens for Window PostMessage events.
+		 *	var postOffice = new LNE_MessagePostOffice(this);
+		 *	postOffice.listenForPostEvents(window);
+		 *	@param window
+		 **/
+		this.LNE_MessagePostOffice.prototype.listenForPostEvents = function( targetWindow ){
+			targetWindow.addEventListener('message',this.receiveMessage.bind(this),false);
+		}
+	</script>
+	-->
 	
-    <script type='text/javascript'>
-        //-- all pages should have something similar to this - catches uncaught javascript issues.
-        window.onerror = function( errMsg, url, lineNumber ){
-            console.log( 'uncaught javascript exception found' );
-            debugger;
-            return( false );
-        }
-        
-        this.accountId='{!$CurrentPage.parameters.Id}';
-        this.contacts=null;
-        
-        jQuery(document).ready(function(){
-            console.log( 'child page ready' );
-            new LNE_PostMessage( 'TEST_PostMessageChild','getContacts',true).dispatch(parent);
-        });
-        
-        var shouldLogOutput=true;
-        
-        function addOutputMessage( msg ){
-            if( shouldLogOutput ){
-                jQuery("ul#output").append( '<li>' + msg + '</li>');
-                console.log( msg );
-            }
-        }
-        
-        function requestMessage(){
-		    addOutputMessage( '-----<br />starting the request' );
-		    
-		    var pageName = 'TEST_PostMessageChild';
+	<script type='text/javascript'>
+		//-- all pages should have something similar to this - catches uncaught javascript issues.
+		window.onerror = function( errMsg, url, lineNumber ){
+			console.log( 'uncaught javascript exception found' );
+			debugger;
+			return( false );
+		}
+		
+		this.accountId='{!$CurrentPage.parameters.Id}';
+		this.contacts=null;
+		
+		jQuery(document).ready(function(){
+			console.log( 'child page ready' );
+			addOutputMessage( '-----<br />requesting pre-loaded contacts' );
+			new LNE_PostMessage( 'TEST_PostMessageChild','getContacts',true).dispatch(parent);
+		});
+		
+		var shouldLogOutput=true;
+		
+		function addOutputMessage( msg ){
+			if( shouldLogOutput ){
+				jQuery("ul#output").append( '<li>' + msg + '</li>');
+				console.log( msg );
+			}
+		}
+		
+		function requestMessage(){
+			addOutputMessage( '-----<br />starting the request' );
+			
+			var pageName = 'TEST_PostMessageChild';
 			var isSuccessful = true;
 			
 			//-- some custom message type. Again, only saveComplete is special/recognized for now.
 			var messageType = 'getMessage';
-            
+			
 			//-- send the data payload as an object with stuff to return.
 			//-- always include src as some unique identifier for the page
 			var data = {
-			    src: window.location.href
+				src: window.location.href
 			};
 			
 			var postMessage = new LNE_PostMessage( pageName, messageType, isSuccessful, data );
@@ -145,83 +146,83 @@
 			//-- works if in a popup
 			//postMessage.dispatch( window.opener );
 			
-            addOutputMessage( 'Child request submitted' );
-        }
-        
-        function requestContacts(){
-            addOutputMessage( '-----<br />starting the request' );
-            
-            var request = new LNE_PostMessage( 'TEST_PostMessageChild','listContacts',true,{accountId:window.accountId});
-            request.dispatch(parent);
-            
-            addOutputMessage( 'Child requested contacts' );
-        }
-        
-        function updateContacts(){
-            addOutputMessage( '---- <br /> starting request to update contacts (increasing price +1)');
-            var updatedContacts = _.union( contacts );
-            
-            _.each( updatedContacts, function( contact, index ){
-                contact.DEMO_CustomCount__c++;
-            });
-            
-            //-- always remove attributes before attempting an update
-            _.each( updatedContacts, function( contact, index ){
-                delete contact.attributes;
-            });
-            
-            var request = new LNE_PostMessage( 'TEST_PostMessageChild','updateContacts',true,{contacts:updatedContacts});
-            request.dispatch(parent);
-            addOutputMessage( 'Child requested contacts update' );
-        }
-        
-        this.postOffice = new LNE_MessagePostOffice(this);
-        this.postOffice.addTypeHandler( "getMessage_result", function( myPostMessage ){
-            addOutputMessage( 'child recieved result!' );
-            jQuery("span#message").html( myPostMessage.data.message );
-        });
-        this.postOffice.addTypeHandler( 'getContacts_result', function( myPostMessage ){
-            if( !myPostMessage.isSuccessful ){
-                addOutputMessage( 'child recived fault:' + JSON.stringify( myPostMessage.data));
-            } else {
-                addOutputMessage( 'child recieved existing set of contacts' );
-                this.contacts = myPostMessage.data.contacts;
-                jQuery("span#contacts").html( JSON.stringify( this.contacts ) );
-            }
-        });
-        this.postOffice.addTypeHandler( 'listContacts_result', function( myPostMessage ){
-            addOutputMessage( 'child recieved result!:' + myPostMessage.isSuccessful );
-            if( myPostMessage.isSuccessful ){
-                this.contacts=myPostMessage.data.contacts;
-                jQuery("span#contacts").html( JSON.stringify( this.contacts ) );
-                addOutputMessage( 'Recieved Contacts');
-            } else {
-                addOutputMessage( 'failure:' + myPostMessage.data.errorMessage );
-            }
-        });
-        this.postOffice.addTypeHandler( 'updateContacts_result', function( myPostMessage){
-            addOutputMessage( 'child recived result!:' + myPostMessage.isSuccessful );
-            if( myPostMessage.isSuccessful ){
-                this.contacts=myPostMessage.data.contacts;
-                jQuery("span#contacts").html( JSON.stringify( this.contacts ) );
-                addOutputMessage( 'Child: Contacts successfully saved');
-            } else {
-                addOutputMessage( 'failure:' + myPostMessage.data.errorMessage );
-            }
-        });
-        
-        postOffice.listenForPostEvents(window);
-    </script>
-    
-    <p>This is the child page page that will call to make the changes using the PostMesage</p>
-    
-    <button onclick='javascript:requestMessage(); return false'>Request Message</button><br />
-    
-    <button onclick='javascript:requestContacts(); return false'>Request Contacts</button><br />
-    
-    <button onclick='javascript:updateContacts(); return false'>Update Contacts</button><br />
-    
-    Message: <span id='message' /><br />
-    Contacts: <span id='contacts' /><br />
-    Output: <ul id='output' />
+			addOutputMessage( 'Child request submitted' );
+		}
+		
+		function requestContacts(){
+			addOutputMessage( '-----<br />starting the request' );
+			
+			var request = new LNE_PostMessage( 'TEST_PostMessageChild','listContacts',true,{accountId:window.accountId});
+			request.dispatch(parent);
+			
+			addOutputMessage( 'Child requested contacts' );
+		}
+		
+		function updateContacts(){
+			addOutputMessage( '---- <br /> starting request to update contacts (increasing price +1)');
+			var updatedContacts = _.union( contacts );
+			
+			_.each( updatedContacts, function( contact, index ){
+				contact.DEMO_CustomCount__c++;
+			});
+			
+			//-- always remove attributes before attempting an update
+			_.each( updatedContacts, function( contact, index ){
+				delete contact.attributes;
+			});
+			
+			var request = new LNE_PostMessage( 'TEST_PostMessageChild','updateContacts',true,{contacts:updatedContacts});
+			request.dispatch(parent);
+			addOutputMessage( 'Child requested contacts update' );
+		}
+		
+		this.postOffice = new LNE_MessagePostOffice(this);
+		this.postOffice.addTypeHandler( "getMessage_result", function( myPostMessage ){
+			addOutputMessage( 'child recieved result!' );
+			jQuery("span#message").html( myPostMessage.data.message );
+		});
+		this.postOffice.addTypeHandler( 'getContacts_result', function( myPostMessage ){
+			if( !myPostMessage.isSuccessful ){
+				addOutputMessage( 'child recived fault:' + JSON.stringify( myPostMessage.data));
+			} else {
+				addOutputMessage( 'child recieved existing set of contacts' );
+				this.contacts = myPostMessage.data.contacts;
+				jQuery("span#contacts").html( JSON.stringify( this.contacts ) );
+			}
+		});
+		this.postOffice.addTypeHandler( 'listContacts_result', function( myPostMessage ){
+			addOutputMessage( 'child recieved result!:' + myPostMessage.isSuccessful );
+			if( myPostMessage.isSuccessful ){
+				this.contacts=myPostMessage.data.contacts;
+				jQuery("span#contacts").html( JSON.stringify( this.contacts ) );
+				addOutputMessage( 'Recieved Contacts');
+			} else {
+				addOutputMessage( 'failure:' + myPostMessage.data.errorMessage );
+			}
+		});
+		this.postOffice.addTypeHandler( 'updateContacts_result', function( myPostMessage){
+			addOutputMessage( 'child recived result!:' + myPostMessage.isSuccessful );
+			if( myPostMessage.isSuccessful ){
+				this.contacts=myPostMessage.data.contacts;
+				jQuery("span#contacts").html( JSON.stringify( this.contacts ) );
+				addOutputMessage( 'Child: Contacts successfully saved');
+			} else {
+				addOutputMessage( 'failure:' + myPostMessage.data.errorMessage );
+			}
+		});
+		
+		postOffice.listenForPostEvents(window);
+	</script>
+	
+	<h2>Child Page that requests updates and displays results.</h2>
+	
+	<button onclick='javascript:requestMessage(); return false'>Request Message</button><br />
+	
+	<button onclick='javascript:requestContacts(); return false'>Request Contacts</button><br />
+	
+	<button onclick='javascript:updateContacts(); return false'>Update Contact&apos;s CustomCount</button><br />
+	
+	Message: <span id='message' /><br />
+	Contacts: <span id='contacts' /><br />
+	Output: <ul id='output' />
 </apex:page>

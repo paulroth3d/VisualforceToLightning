@@ -6,11 +6,11 @@
  * /apex/TEST_PostMessageParent
  **/-->
 <apex:page controller="TEST_PostMessageParent_C"
-    showHeader="false" sidebar="false" standardStylesheets="false"
+	showHeader="false" sidebar="false" standardStylesheets="false"
 >
 	<!-- PostMessage communicates between windows -->
 	<apex:includeScript value="{!URLFOR($Resource.LNE_GeneralResources,"js/events/LNE_PostMessage2.js")}" />
-    <!-- Used to simplify remoting calls -->
+	<!-- Used to simplify remoting calls -->
 	<apex:includeScript value="{!URLFOR($Resource.LNE_GeneralResources,"js/remoting/RemotingHelper.js")}" />
 	<!-- handles routing of PostMessages -->
 	<apex:includeScript value="{!URLFOR($Resource.LNE_GeneralResources,"js/events/LNE_MessagePostOffice.js")}" />
@@ -22,305 +22,308 @@
 	
 	<!-- any inline styles -->
 	<style type='text/css'>
-	    .errors {
-	        color:#FF0000;
-	    }
+		.errors {
+			color:#FF0000;
+		}
 	</style>
 	
 	<!-- todo - separate out to a separate javascript file -->
 	<!--
 	<script type='text/javascript'>
-        
-	    //-- @TODO: separate out to a separate file
-        /**
-         *  Helper function for calling remoting methods
-         *  ex: remotingHelper( 'TEST_POstMessageParent_C.calculateSomething', 1,1,2, successFunction, failureFunction );
-         *  @param remoting function name - Class.Remoting Method - i.e. TEST_PostMessageParent_C.getMessage
-         *  @param [any additional arguments to remoting call]
-         *  @param function successHandler - always the first arguent
-         *  @param function failureHandler - always the last argument
-         **/
-        function remotingHelper(){
-            var remotingArguments = _.union(arguments);
-            try {
-                var remotingFunctionName = remotingArguments.shift();
-            
-                var failureHandler = remotingArguments.pop();
-                var successHandler = remotingArguments.pop();
-                var scope = this;
-                
-                var remotingHandler = function(result,event){
-                    //console.log('remoting returned');
-                    if(event.status){
-                        successHandler.call( scope, result );
-                    } else if( event.type == 'exception' ){
-                        console.log( 'remoting failure' ); debugger;
-                        failureHandler.call( scope, event.message, result, event);
-                    } else {
-                        console.log( 'unknown remoting failure' ); debugger;
-                        failureHandler.call( scope, event.message, result, event);
-                    }
-                }
-                
-                var errorString='';
-                if( !remotingFunctionName || typeof remotingFunctionName !== 'string' ){
-                    errorString = 'remoting call error: remoting function name was not sent or was not understood:' + remotingFunctionName + '. Please check the remoting call directory as the first arguement';
-                } else if( remotingFunctionName.indexOf('.') < 0 ){
-                    errorString = 'remoting call error: remember that the remoting call must include the ApexClassName. Ex: TEST_PostMessgeParent_C.getMessage';
-                } else if( !failureHandler || typeof failureHandler !== 'function' ){
-                    errorString = 'remoting call error: the last two arguments must be: a success handler and an error handler. The error handler was not found.';
-                } else if( !successHandler || typeof successHandler !== 'function' ){
-                    errorString = 'remoting call error: the last two arguments must be: a success handler and an error handler. the success handler was not found.';
-                }
-                
-                var remotingFunctionNameTranslation = '';
-                if( errorString ){
-                    console.error( errorString );
-                    console.error(arguments);
-                    failureHandler(errorString);
-                    return;
-                }
-                
-                var newArguments = _.union( [remotingFunctionName], remotingArguments, [remotingHandler] );
-                Visualforce.remoting.Manager.invokeAction.apply(Visualforce.remoting.Manager,newArguments);
-            } catch( err ){
-                console.error( err ); debugger;
-            }
-        }
-    </script>
-    -->
-    
+		
+		//-- @TODO: separate out to a separate file
+		/**
+		 *	Helper function for calling remoting methods
+		 *	ex: remotingHelper( 'TEST_POstMessageParent_C.calculateSomething', 1,1,2, successFunction, failureFunction );
+		 *	@param remoting function name - Class.Remoting Method - i.e. TEST_PostMessageParent_C.getMessage
+		 *	@param [any additional arguments to remoting call]
+		 *	@param function successHandler - always the first arguent
+		 *	@param function failureHandler - always the last argument
+		 **/
+		function remotingHelper(){
+			var remotingArguments = _.union(arguments);
+			try {
+				var remotingFunctionName = remotingArguments.shift();
+			
+				var failureHandler = remotingArguments.pop();
+				var successHandler = remotingArguments.pop();
+				var scope = this;
+				
+				var remotingHandler = function(result,event){
+					//console.log('remoting returned');
+					if(event.status){
+						successHandler.call( scope, result );
+					} else if( event.type == 'exception' ){
+						console.log( 'remoting failure' ); debugger;
+						failureHandler.call( scope, event.message, result, event);
+					} else {
+						console.log( 'unknown remoting failure' ); debugger;
+						failureHandler.call( scope, event.message, result, event);
+					}
+				}
+				
+				var errorString='';
+				if( !remotingFunctionName || typeof remotingFunctionName !== 'string' ){
+					errorString = 'remoting call error: remoting function name was not sent or was not understood:' + remotingFunctionName + '. Please check the remoting call directory as the first arguement';
+				} else if( remotingFunctionName.indexOf('.') < 0 ){
+					errorString = 'remoting call error: remember that the remoting call must include the ApexClassName. Ex: TEST_PostMessgeParent_C.getMessage';
+				} else if( !failureHandler || typeof failureHandler !== 'function' ){
+					errorString = 'remoting call error: the last two arguments must be: a success handler and an error handler. The error handler was not found.';
+				} else if( !successHandler || typeof successHandler !== 'function' ){
+					errorString = 'remoting call error: the last two arguments must be: a success handler and an error handler. the success handler was not found.';
+				}
+				
+				var remotingFunctionNameTranslation = '';
+				if( errorString ){
+					console.error( errorString );
+					console.error(arguments);
+					failureHandler(errorString);
+					return;
+				}
+				
+				var newArguments = _.union( [remotingFunctionName], remotingArguments, [remotingHandler] );
+				Visualforce.remoting.Manager.invokeAction.apply(Visualforce.remoting.Manager,newArguments);
+			} catch( err ){
+				console.error( err ); debugger;
+			}
+		}
+	</script>
+	-->
+	
 	<!-- js/events/LNE_MessagePostOffice.js -->
 	<!--
 	<script type='text/javascript'>
-	    
-	    /**
-	     * Class to help manage different types of postMessages based on postMessageType
-	     **/
-	    this.LNE_MessagePostOffice = function( handlerScope ){
-	        if( !handlerScope ){
-	            this.handlerScope = this;
-	        } else {
-	            this.handlerScope = handlerScope;
-	        }
-	        this.handlers = {};
-	        
-	        this.unknownHandlerDefault = function( myPostMessage ){
-	            var errorMessage = 'there was no handler for messageType:' + myPostMessage.messageType;
-                console.error( errorMessage ); console.error( arguments );
-                debugger;
-	        };
-	        
-	        this.unknownHandler = this.unknownHandlerDefault;
-	    }
-	    
-	    /**
-	     * Adds a new handler based on messageType
-	     * @param messageType (string)
-	     * @param handler (function)
-	     **/
-	    this.LNE_MessagePostOffice.prototype.addTypeHandler = function( messageType, handler ){
-	        if( messageType ){
-    	        this.handlers[messageType]=handler;
-	        } else {
-	            this.unknownHandler = handler;
-	        }
-	    }
-	    
-	    /**
-	     *  Handles a new call that comes in
-	     *  @param postMessage event
-	     *  @return boolean - whether the postMessage could be handled (true) or not (false);
-	     **/
-	    this.LNE_MessagePostOffice.prototype.receiveMessage = function( postMessage ){
-	        var myPostMessage = new LNE_PostMessage();
-            if( myPostMessage.parse(postMessage) ){
-                if( this.handlers.hasOwnProperty( myPostMessage.messageType ) ){
-                    this.handlers[ myPostMessage.messageType ].call( this.handlerScope, myPostMessage );
-                    return( true );
-                } if( this.unknownHandler ){
-                    this.unknownHandler.call( this.handlerScope, myPostMessage );
-                    return( false );
-                } else {
-                    this.unknownHandlerDefault.call( this.handlerScope, myPostMessage );
-                    return( false );
-                }
-            } else {
-                //-- not our message
-                return( false );
-            }
-	    }
-	    
-	    /**
-	     *  Listens for Window PostMessage events.
-	     *  var postOffice = new LNE_MessagePostOffice(this);
-	     *  postOffice.listenForPostEvents(window);
-	     *  @param window
-	     **/
-	    this.LNE_MessagePostOffice.prototype.listenForPostEvents = function( targetWindow ){
-	        targetWindow.addEventListener('message',this.receiveMessage.bind(this),false);
-	    }
-    </script>
-    -->
-    
+		
+		/**
+		 * Class to help manage different types of postMessages based on postMessageType
+		 **/
+		this.LNE_MessagePostOffice = function( handlerScope ){
+			if( !handlerScope ){
+				this.handlerScope = this;
+			} else {
+				this.handlerScope = handlerScope;
+			}
+			this.handlers = {};
+			
+			this.unknownHandlerDefault = function( myPostMessage ){
+				var errorMessage = 'there was no handler for messageType:' + myPostMessage.messageType;
+				console.error( errorMessage ); console.error( arguments );
+				debugger;
+			};
+			
+			this.unknownHandler = this.unknownHandlerDefault;
+		}
+		
+		/**
+		 * Adds a new handler based on messageType
+		 * @param messageType (string)
+		 * @param handler (function)
+		 **/
+		this.LNE_MessagePostOffice.prototype.addTypeHandler = function( messageType, handler ){
+			if( messageType ){
+				this.handlers[messageType]=handler;
+			} else {
+				this.unknownHandler = handler;
+			}
+		}
+		
+		/**
+		 *	Handles a new call that comes in
+		 *	@param postMessage event
+		 *	@return boolean - whether the postMessage could be handled (true) or not (false);
+		 **/
+		this.LNE_MessagePostOffice.prototype.receiveMessage = function( postMessage ){
+			var myPostMessage = new LNE_PostMessage();
+			if( myPostMessage.parse(postMessage) ){
+				if( this.handlers.hasOwnProperty( myPostMessage.messageType ) ){
+					this.handlers[ myPostMessage.messageType ].call( this.handlerScope, myPostMessage );
+					return( true );
+				} if( this.unknownHandler ){
+					this.unknownHandler.call( this.handlerScope, myPostMessage );
+					return( false );
+				} else {
+					this.unknownHandlerDefault.call( this.handlerScope, myPostMessage );
+					return( false );
+				}
+			} else {
+				//-- not our message
+				return( false );
+			}
+		}
+		
+		/**
+		 *	Listens for Window PostMessage events.
+		 *	var postOffice = new LNE_MessagePostOffice(this);
+		 *	postOffice.listenForPostEvents(window);
+		 *	@param window
+		 **/
+		this.LNE_MessagePostOffice.prototype.listenForPostEvents = function( targetWindow ){
+			targetWindow.addEventListener('message',this.receiveMessage.bind(this),false);
+		}
+	</script>
+	-->
+	
 	<!-- todo - separate out to a separate javascript file -->
 	<script type='text/javascript'>
-        var shouldLogOutput=true;
-        
-        this.accountId='{!accountId}';
-        this.contacts=JSON.parse('{!contactsJSON}');
+		var shouldLogOutput=true;
+		
+		this.accountId='{!accountId}';
+		this.contacts=JSON.parse('{!contactsJSON}');
 
-        //-- all pages should have something similar to this - catches uncaught javascript issues.
-        window.onerror = function( errMsg, url, lineNumber ){
-            console.log( 'uncaught javascript exception found' );
-            debugger;
-            return( false );
-        }
-        
-        function addOutputMessage( msg ){
-            if( shouldLogOutput ){
-                jQuery("ul#output").append( '<li>' + msg + '</li>');
-                console.log( msg );
-            }
-        }
-        
-        this.postOffice = new LNE_MessagePostOffice(this);
-        this.postOffice.addTypeHandler( 'getMessage', function( myPostMessage ){
-            addOutputMessage( '---- <br /> Parent received request for:' + myPostMessage.messageType );
-            
-            var targetFrame = jQuery( "iframe#targetFrame" )[0];
-            
-            //-- get the value from remoting and pass the results to the child iframe on success
-            
-            remotingHelper( 'TEST_PostMessageParent_C.getMessage', 
-                function( messageResult ){
-                    addOutputMessage( 'REMOTING:SUCCESS:' + messageResult );
-                    //debugger;
-                    
-                    var pageName = 'TEST_PostMessageParent';
-                    var isSuccessful = true;
-                    
-                    //-- some custom message type. Again, only saveComplete is special/recognized for now.
-                    var messageType = 'getMessage_result'
-                    
-                    //-- send the data payload as an object with stuff to return.
-                    //-- always include src as some unique identifier for the page
-                    var data = {
-                        message: messageResult,
-                        src: window.location.href
-                    };
-                    
-                    addOutputMessage( 'Sending response back to child' );
+		//-- all pages should have something similar to this - catches uncaught javascript issues.
+		window.onerror = function( errMsg, url, lineNumber ){
+			console.log( 'uncaught javascript exception found' );
+			debugger;
+			return( false );
+		}
+		
+		function addOutputMessage( msg ){
+			if( shouldLogOutput ){
+				jQuery("ul#output").append( '<li>' + msg + '</li>');
+				console.log( msg );
+			}
+		}
+		
+		this.postOffice = new LNE_MessagePostOffice(this);
+		this.postOffice.addTypeHandler( 'getMessage', function( myPostMessage ){
+			addOutputMessage( '---- <br /> Parent received request for:' + myPostMessage.messageType );
+			
+			var targetFrame = jQuery( "iframe#targetFrame" )[0];
+			
+			//-- get the value from remoting and pass the results to the child iframe on success
+			
+			remotingHelper( 'TEST_PostMessageParent_C.getMessage', 
+				function( messageResult ){
+					addOutputMessage( 'REMOTING:SUCCESS:' + messageResult );
+					//debugger;
+					
+					var pageName = 'TEST_PostMessageParent';
+					var isSuccessful = true;
+					
+					//-- some custom message type. Again, only saveComplete is special/recognized for now.
+					var messageType = 'getMessage_result'
+					
+					//-- send the data payload as an object with stuff to return.
+					//-- always include src as some unique identifier for the page
+					var data = {
+						message: messageResult,
+						src: window.location.href
+					};
+					
+					addOutputMessage( 'Sending response back to child' );
 
-                    var postMessage = new LNE_PostMessage( pageName, messageType, isSuccessful, data );
-                    postMessage.dispatch( targetFrame.contentWindow );
-                    
-                    addOutputMessage( 'Response sent to child' );
-                    
-                }, function( errorMessage ){
-                    addOutputMessage( 'REMOTING:FAILURE:' + errorMessage );
-                    debugger;
-                }
-            );
-        });
-        
-        this.postOffice.addTypeHandler( 'getContacts', function(myPostMessage){
-            //-- just return the contacts we already have.
-            addOutputMessage('---- <br /> parent recieved request to give contacts we already have' );
-            var targetFrame = jQuery( 'iframe#targetFrame' )[0];
-            new LNE_PostMessage( 'TEST_PostMessageParent','getContacts_result',true,{accountId:accountId,contacts:contacts}).dispatch( targetFrame.contentWindow );
-            addOutputMessage( 'response submitted to child' );
-        });
-        
-        this.postOffice.addTypeHandler( 'listContacts', function( myPostMessage ){
-            addOutputMessage( '---- <br /> Parent recieved request for:' + myPostMessage.messageType );
-            
-            var targetFrame = jQuery( 'iframe#targetFrame' )[0];
-            var accountId=myPostMessage.data.accountId;
-            
-            if( !accountId ){
-                var errorMessage='accountId is blank';
-                new LNE_PostMessage( 'TEST_PostMessageParent','listContacts_result',true,{accountId:accountId,errorMessage:errorMessage}).dispatch( targetFrame.contentWindow );
-            } else {
-                remotingHelper( 'TEST_PostMessageParent_C.listContacts', accountId,
-                    function( contacts ){
-                        addOutputMessage( 'REMOTING:SUCCESS' );
-                        var responseMessage = new LNE_PostMessage( 'TEST_PostMessageParent','listContacts_result',true,{accountId:accountId,contacts:contacts});
-                        responseMessage.dispatch( targetFrame.contentWindow );
-                        addOutputMessage( 'Response sent to child' );
-                    },
-                    function( errorMessage ){
-                        addOutputMessage( 'REMOTING:FAILURE:' + errorMessage );
-                        debugger;
-                        
-                        var responseMessage = new LNE_PostMessage( 'TEST_PostMessageParent','listContacts_result',false,{accountId:accountId,errorMessage:errorMessage});
-                        responseMessage.dispatch( targetFrame.contentWindow );
-                        addOutputMessage( 'Response sent to child' );
-                    }
-                );
-            }
-        });
-        
-        postOffice.addTypeHandler( 'updateContacts', function( myPostMessage ){
-            addOutputMessage( '---- <br /> Parent recieved request to update contacts' );
-            
-            var targetFrame = jQuery( 'iframe#targetFrame' )[0];
-            var updatedContacts = myPostMessage.data.contacts;
-            
-            if( !updatedContacts ){
-                var errorMessage='must have contacts to update';
-                new LNE_PostMessage( 'TEST_PostMessageParent','updateContacts_result',true,{errorMessage:errorMessage}).dispatch( targetFrame.contentWindow );
-            } else {
-                remotingHelper( 'TEST_PostMessageParent_C.updateContacts', updatedContacts,
-                    function( contacts ){
-                        addOutputMessage( 'REMOTING:SUCCESS' );
-                        var responseMessage = new LNE_PostMessage( 'TEST_PostMessageParent','updateContacts_result',true,{contacts:contacts});
-                        responseMessage.dispatch( targetFrame.contentWindow );
-                        
-                        this.contacts=updatedContacts;
-                        addOutputMessage( 'Response sent to child' );
-                    },
-                    function( errorMessage ){
-                        addOutputMessage( 'REMOTING:FAILURE:' + errorMessage );
-                        debugger;
-                        
-                        var responseMessage = new LNE_PostMessage( 'TEST_PostMessageParent','listContacts_result',false,{updatedContacts:updatedContacts,errorMessage:errorMessage});
-                        responseMessage.dispatch( targetFrame.contentWindow );
-                        addOutputMessage( 'Response sent to child' );
-                    }
-                );
-            }
-        });
-        
-        postOffice.listenForPostEvents(window);
+					var postMessage = new LNE_PostMessage( pageName, messageType, isSuccessful, data );
+					postMessage.dispatch( targetFrame.contentWindow );
+					
+					addOutputMessage( 'Response sent to child' );
+					
+				}, function( errorMessage ){
+					addOutputMessage( 'REMOTING:FAILURE:' + errorMessage );
+					debugger;
+				}
+			);
+		});
+		
+		this.postOffice.addTypeHandler( 'getContacts', function(myPostMessage){
+			//-- just return the contacts we already have.
+			addOutputMessage('---- <br /> parent recieved request to give contacts we already have' );
+			var targetFrame = jQuery( 'iframe#targetFrame' )[0];
+			new LNE_PostMessage( 'TEST_PostMessageParent','getContacts_result',true,{accountId:accountId,contacts:contacts}).dispatch( targetFrame.contentWindow );
+			addOutputMessage( 'response submitted to child' );
+		});
+		
+		this.postOffice.addTypeHandler( 'listContacts', function( myPostMessage ){
+			addOutputMessage( '---- <br /> Parent recieved request for:' + myPostMessage.messageType );
+			
+			var targetFrame = jQuery( 'iframe#targetFrame' )[0];
+			var accountId=myPostMessage.data.accountId;
+			
+			if( !accountId ){
+				var errorMessage='accountId is blank';
+				new LNE_PostMessage( 'TEST_PostMessageParent','listContacts_result',true,{accountId:accountId,errorMessage:errorMessage}).dispatch( targetFrame.contentWindow );
+			} else {
+				remotingHelper( 'TEST_PostMessageParent_C.listContacts', accountId,
+					function( contacts ){
+						addOutputMessage( 'REMOTING:SUCCESS' );
+						var responseMessage = new LNE_PostMessage( 'TEST_PostMessageParent','listContacts_result',true,{accountId:accountId,contacts:contacts});
+						responseMessage.dispatch( targetFrame.contentWindow );
+						addOutputMessage( 'Response sent to child' );
+					},
+					function( errorMessage ){
+						addOutputMessage( 'REMOTING:FAILURE:' + errorMessage );
+						debugger;
+						
+						var responseMessage = new LNE_PostMessage( 'TEST_PostMessageParent','listContacts_result',false,{accountId:accountId,errorMessage:errorMessage});
+						responseMessage.dispatch( targetFrame.contentWindow );
+						addOutputMessage( 'Response sent to child' );
+					}
+				);
+			}
+		});
+		
+		postOffice.addTypeHandler( 'updateContacts', function( myPostMessage ){
+			addOutputMessage( '---- <br /> Parent recieved request to update contacts' );
+			
+			var targetFrame = jQuery( 'iframe#targetFrame' )[0];
+			var updatedContacts = myPostMessage.data.contacts;
+			
+			if( !updatedContacts ){
+				var errorMessage='must have contacts to update';
+				new LNE_PostMessage( 'TEST_PostMessageParent','updateContacts_result',true,{errorMessage:errorMessage}).dispatch( targetFrame.contentWindow );
+			} else {
+				remotingHelper( 'TEST_PostMessageParent_C.updateContacts', updatedContacts,
+					function( contacts ){
+						addOutputMessage( 'REMOTING:SUCCESS' );
+						var responseMessage = new LNE_PostMessage( 'TEST_PostMessageParent','updateContacts_result',true,{contacts:contacts});
+						responseMessage.dispatch( targetFrame.contentWindow );
+						
+						this.contacts=updatedContacts;
+						addOutputMessage( 'Response sent to child' );
+					},
+					function( errorMessage ){
+						addOutputMessage( 'REMOTING:FAILURE:' + errorMessage );
+						debugger;
+						
+						var responseMessage = new LNE_PostMessage( 'TEST_PostMessageParent','listContacts_result',false,{updatedContacts:updatedContacts,errorMessage:errorMessage});
+						responseMessage.dispatch( targetFrame.contentWindow );
+						addOutputMessage( 'Response sent to child' );
+					}
+				);
+			}
+		});
+		
+		postOffice.listenForPostEvents(window);
 
-        jQuery(document).ready(function(){
-            console.log( 'parent page ready' );
-            //getMessage();
-            
-            //-- list out any of the initial errors from the page.
-            //-- the majority of the errors are expected to be found only through remoting/ajax.
-            //-- so this is only really needed at the start.
-            var initialPageErrors = JSON.parse('{!errorStringsJSON}');
-            if( initialPageErrors && initialPageErrors.length > 0 ){
-                jQuery("ul#errorList").before( "<span>There were errors when loading the page:</span>");
-                _.each( initialPageErrors, function(errorStr){
-                   jQuery( "ul#errorList" ).append( "<li>"+errorStr+"</li>")
-                });
-            }
-        });
-    </script>
-    
-    
-    <!-- show the list of errors when the page initially runs -->
-    <div class='errors'>
-        <ul id='errorList' />
-    </div>
-    
-    <p>This is the parent page that will have access to remote actions etc.</p>
+		jQuery(document).ready(function(){
+			console.log( 'parent page ready' );
+			//getMessage();
+			
+			//-- list out any of the initial errors from the page.
+			//-- the majority of the errors are expected to be found only through remoting/ajax.
+			//-- so this is only really needed at the start.
+			var initialPageErrors = JSON.parse('{!errorStringsJSON}');
+			if( initialPageErrors && initialPageErrors.length > 0 ){
+				jQuery("ul#errorList").before( "<span>There were errors when loading the page:</span>");
+				_.each( initialPageErrors, function(errorStr){
+				   jQuery( "ul#errorList" ).append( "<li>"+errorStr+"</li>")
+				});
+			}
+		});
+	</script>
+	
+	
+	<!-- show the list of errors when the page initially runs -->
+	<div class='errors'>
+		<ul id='errorList' />
+	</div>
+	
+	<h2>This is the parent page that will have access to remote actions etc.</h2>
+	
+	<p>This is just using the first account with contacts found.
+		To update additional contacts, navigate to /apex/TEST_PostMessageParent?Id=[ Account SalesForce Id ]</p>
 
-    Output: <ul id='output' />
+	Output: <ul id='output' />
 
-    <iframe src="/apex/TEST_PostMessageChild?pageNum=3&Id={!accountId}" id='targetFrame' class="" frameborder="0" width="100%" height="1000" scrolling="auto" />
-    
+	<iframe src="/apex/TEST_PostMessageChild?pageNum=3&Id={!accountId}" id='targetFrame' class="" frameborder="1" width="100%" height="1000" scrolling="auto" />
+	
 </apex:page>
