@@ -77,6 +77,11 @@ sf.maxPoll=500
       <sf:deploy username="${sf.username}" password="${sf.password}" sessionId="${sf.sessionId}" serverurl="${sf.serverurl}" maxPoll="${sf.maxPoll}"
       	deployRoot="src/" checkOnly="false"  rollbackOnError="true"
       	/>
+      
+      <echo><![CDATA[
+Success.
+
+Please navigate to /apex/TEST_PostMessageParent within your environment to see the demo.]]></echo>
     </target>
     
     <!-- internal tasks -->
