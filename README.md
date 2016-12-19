@@ -9,29 +9,16 @@ along with demo materials:
 
 * DEMO_CustomCount__c custom field on Contact
 * TEST_PostMessageParent - starting point for the demo
-* TEST_PostMessageParent__c custom controller
+* TEST_PostMessageParent__c custom controller class
 * TEST_PostMessageChild - child page contained within the demo
+* Contact CustomField - field for the demo to provide a number Contacts (to be incremented)
 
-# Deploying Demo
+(Please note that a custom field is added to Contact for the demo)
 
-@TODO: make a separate deployment for just the component and static resource
-
-**1: run `ant makeCredentials` to generate the credentials file**
-
-	ant makeCredentials
-	
-**2: run `ant test` to do a test deploy**
-
-	ant test
-	
-**3: run `ant deploy` to deploy the demo to your org**
-
-	ant deploy
-	
-**4: login and navigate to /apex/TEST_PostMessageParent**
+For additional information, please see the [Attached Writeup - VisualforcetoLightningOverview.pdf](VisualforcetoLightningOverview.pdf)
 
 
-# Helpers
+# Included Helpers
 
 #### LNE_PostMessage2
 
@@ -178,4 +165,72 @@ For an example page that communicates please see
 	 example: this.postOffice.listenForPostEvents( window );
 	 @param w (Window) window to listen to post messages on.
 	 @return void
+	 
+#Demo
+	 
+## Deploying Demo
 
+@TODO: make a separate deployment for just the component and static resource
+
+**1: run `ant makeCredentials` to generate the credentials file**
+
+	ant makeCredentials
+	
+**2: run `ant test` to do a test deploy**
+
+	ant test
+	
+**3: run `ant deploy` to deploy the demo to your org**
+
+	ant deploy
+	
+**4: login and navigate to /apex/TEST_PostMessageParent**
+
+## Whats in the Demo
+
+The demo example provides 3 main scenarios for communicating between domains:
+
+![Overview Image](docs/images/Overview.jpg)
+
+#### 1: Results already in JavaScript
+
+In this case, the parent+child pages load,
+and the parent can pre-cache the information the child will ask for.
+
+(In this case by serializing/deserializing through JSON)
+
+![Sequence Diagram](docs/images/Demo_Interaction1.png)
+[Web Sequence Diagram](https://www.websequencediagrams.com/?lz=dGl0bGUgVmlzdWFsRm9yY2UgV2F2ZSBJbnRlcmFjdGlvbiAxCgpwYXJ0aWNpcGFudCBVc2VyAAQNUGFyZW50AAESdENvbnRyb2xsACEPQ2hpbGQKClVzZXItPgA3BjogCgBABiAtPiAqAC4QOgAWBwBGCiAtPgBwBzogSlNPTi5zZXJpYWxpemUgY2FjaGVkIGRhdGEASQsAIA1wYXJzABUULT4qAIEXBToKAIEeBQBZDG9uTG9hZDogUG9zdE1lc3NhZ2UoZ2UAgV0FYWN0cykAWBM8Z2V0IGMAGgcgYWxyZWFkeSBsb2FkZWQgYnkAgTMFPgCBbgktPgCCEgYAVQ4gAFkLX3Jlc3VsdHMsAEwJW10gKQ&s=default)
+
+#### 2: Request Remoting
+
+The child needs to call a remoting call that isn't available within its domain.
+
+The child sends a postMessage to its parent,
+the parent makes a remoting call
+and then sends a postMessage to the child '_result'.
+
+The results (the list of contacts)
+are added to the data object sent
+and so are available in the data object when receiving it.
+
+![Sequence Diagram](docs/images/Demo_Interaction2.png)
+[Web Sequence Diagram](https://www.websequencediagrams.com/?lz=dGl0bGUgVmlzdWFsRm9yY2UgV2F2ZSBJbnRlcmFjdGlvbiAyCgpwYXJ0aWNpcGFudCBVc2VyAAQNUGFyZW50ABcNUmVtb3RpbmcALA1DaGlsZAoKVXNlci0-AAgFOiBHZXQgdXBkYXRlZCBzZXQgb2YgY2hpbGRyZW4KACsFLT4AWQY6IFBvc3RNZXNzYWdlKGxpc3RDb250YWN0cykKAHsGIC0-AIEEBzogcG9zdE9mZmljZSByZWNlaXZlcyBtADYGVHlwZSAANAwANAsAgS8IOiBURVNUXwBnCwCBXgZfYy4ALQ0AgV8IIC0AcgoKCk9wdCByZXNwb25zZSBzdWNjZXNzIChjAIEmCSAgIACCLQcgLT4AghAGAIFEGl9yZXN1bHQsdHJ1ZSwANg4AgksFADgLAIFnDmllAIFmDwAeFnJvY2Vzc2VzAIIuBQCCWAcuZGF0YQplbHNlAIE-CmZhaWx1cmUgKGVycm9yAIMBBwCBFTdmYWxzZSwANxIAgQNOAIEqCGFuZCByZXRyaWVzIGlmIG5lZWRlZC4KZW5kCg&s=default)
+
+#### 3: Request Update (parameters)
+
+The child needs to update the records
+(increase the count within the CustomCount field)
+
+The child takes the list of children already sent,
+updates the values and applies it to the data on request.
+
+Just like the data is available for transmitting results,
+the data object is available on the initial request.
+
+The parent uses that data in the remoting call,
+and transmits the updated results to the child,
+so it can update its state.
+
+![Sequence Diagram](docs/images/Demo_Interaction3.png)
+[Web Sequence Diagram](https://www.websequencediagrams.com/?lz=dGl0bGUgVmlzdWFsRm9yY2UgV2F2ZSBJbnRlcmFjdGlvbiAyCgpwYXJ0aWNpcGFudCBVc2VyAAQNUGFyZW50ABcNUmVtb3RpbmcALA1DaGlsZAoKVXNlci0-AAgFOiBVcGRhdGUgY2hpbGRyZW4gLSBDdXN0b21Db3VudAoALQUtPgBbBjogUG9zdE1lc3NhZ2UodQA0BUNvbnRhY3RzLHRydWUsAA4GZAANCCkKAIEUBiAtPgCBHQc6IHBvc3RPZmZpY2UgcmVjZWl2ZXMgbQBNBlR5cGUgAEkOCgA3CwCBSwg6IFRFU1RfAIEBCwCBegZfYy5saXN0AIEKCACBGgcAgQILAIIMCCAtAIEGCgoKT3B0IHJlc3BvbnNlIHN1Y2Nlc3MgKGMAgToJICAgAIJaByAtPgCCPQYAgXsOAGkMX3Jlc3VsdACBdxcgICAAgn4GAD8LAIICDmllAIIBDwAeFnJvY2Vzc2VzAIJJBQCDCgcuZGF0YQplbHNlAIFFCmZhaWx1cmUgKGVycm9yAIMzBwCBHDdmYWxzZSwANxIAgQNOAIEqCGFuZCByZXRyaWVzIGlmIG5lZWRlZC4KZW5kCg&s=default)
